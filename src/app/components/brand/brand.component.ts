@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Brand } from 'src/app/models/brands';
 
 @Component({
   selector: 'app-brand',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./brand.component.css']
 })
 export class BrandComponent implements OnInit {
-
+  brands: Brand[]=[]
   constructor() { }
 
   ngOnInit(): void {

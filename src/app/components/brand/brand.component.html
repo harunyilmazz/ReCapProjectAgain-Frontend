@@ -1,10 +1,6 @@
 <label>
-    <h5>Markalar</h5>
+  <h5>Markalar</h5>
 </label>
-<ul class="list-group">
-    <li class="list-group-item">Marka1</li>
-    <li class="list-group-item">Marka2</li>
-    <li class="list-group-item">Marka3</li>
-    <li class="list-group-item">Marka4</li>
-    <li class="list-group-item">Marka5</li>
-  </ul>
+<ul *ngFor="let brand of brands" class="list-group">
+  <li class="list-group-item">{{brand.brandName}}</li>
+</ul>

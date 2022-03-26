@@ -1,8 +1,10 @@
-<label>
-    <h5>Müşteriler</h5>
-</label>
-<table>
-    <tr>
-        <td>Müşteri bilgileri buraya gelecek</td>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Müşteriler</th>
+        </tr>
+    </thead>
+    <tr *ngFor="let customer of customers">
+        <td>{{customer.companyName}}</td>
     </tr>
 </table>

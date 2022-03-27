@@ -8,6 +8,7 @@ import { ColorComponent } from './components/color/color.component';
 import { CustomerComponent } from './components/customer/customer.component';
 import { NaviComponent } from './components/navi/navi.component';
 import { HttpClientModule } from '@angular/common/http';
+import { CarDetailComponent } from './components/car-detail/car-detail.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
     BrandComponent,
     ColorComponent,
     CustomerComponent,
-    NaviComponent
+    NaviComponent,
+    CarDetailComponent
   ],
   imports: [
     BrowserModule,

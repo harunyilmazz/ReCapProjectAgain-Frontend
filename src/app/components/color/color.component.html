@@ -1,9 +1,9 @@
-<label>
-    <h5>Renkler</h5>
+<div *ngIf="dataLoaded==false" class="spinner-border text-secondary" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+<label *ngIf="dataLoaded==true">
+  <h5>Renkler</h5>
 </label>
-<ul class="list-group">
-    <li *ngFor="let color of colors" class="list-group-item">
-      <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
-      {{color.colorName}}
-    </li>
-  </ul>
+<ul *ngFor="let color of colors" class="list-group">
+  <li class="list-group-item">{{color.colorName}}</li>
+</ul>

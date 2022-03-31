@@ -1,23 +1,41 @@
-<div *ngIf="dataLoaded==false" class="spinner-border text-secondary" role="status">
-    <span class="visually-hidden">Loading...</span>
+<div
+  *ngIf="dataLoaded == false"
+  class="spinner-border text-secondary"
+  role="status"
+>
+  <span class="visually-hidden">Loading...</span>
 </div>
-<table class="table">
-    <thead *ngIf="dataLoaded==true">
-        <tr>
-            <th>Id</th>
-            <th>Araç Adı</th>
-            <th>Marka</th>
-            <th>Renk</th>
-            <th>Üretim Yılı</th>
-            <th>Günlük Ücreti</th>
-        </tr>
-    </thead>
-    <tr *ngFor="let carDetail of carDetails">
-        <td>{{carDetail.carId}}</td>
-        <td>{{carDetail.carName}}</td>
-        <td>{{carDetail.brandName}}</td>
-        <td>{{carDetail.colorName}}</td>
-        <td>{{carDetail.modelYear}}</td>
-        <td>{{carDetail.dailyPrice}}</td>
-    </tr>
-</table>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  <div *ngFor="let carDetail of carDetails" class="col">
+    <div class="card">
+      <img
+        [src]="setCurrentCarImageSrc()"
+        [class]="getCurrentCarClass(carDetail)"
+        [alt]="setCurrentCarImageAlt()"
+        height="150px"
+      />
+      <div class="card-body">
+        <h5 class="card-title">{{ carDetail.carName }}</h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <b style="float: left; width: 50%; text-align: left">Marka</b>
+            {{ carDetail.brandName }}
+          </li>
+          <li class="list-group-item">
+            <b style="float: left; width: 50%; text-align: left">Renk</b>
+            {{ carDetail.colorName }}
+          </li>
+          <li class="list-group-item">
+            <b style="float: left; width: 50%; text-align: left">Model</b>
+            {{ carDetail.modelYear }}
+          </li>
+          <h5 align="center">{{ carDetail.dailyPrice }} ₺</h5>
+        </ul>
+
+        <div class="d-grid">
+          <a href="#" class="btn btn-warning">Kirala</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

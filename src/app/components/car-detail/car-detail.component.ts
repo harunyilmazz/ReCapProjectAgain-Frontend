@@ -10,6 +10,9 @@ import { CarDetailService } from 'src/app/services/car-detail.service';
 export class CarDetailComponent implements OnInit {
   carDetails: CarDetail[] = [];
   dataLoaded = false;
+  currentCar?:CarDetail;
+  imgBaseUrl:string="https://localhost:44389/uploads/images/"; 
+  
   constructor(private carDetailService: CarDetailService) {}
 
   ngOnInit(): void {
@@ -22,4 +25,17 @@ export class CarDetailComponent implements OnInit {
       this.dataLoaded = true;
     });
   }
+
+  getCurrentCarClass(carDetail:CarDetail){
+    this.currentCar=carDetail;
+  }
+
+  setCurrentCarImageSrc(){
+     return this.imgBaseUrl + this.currentCar?.carImagePath[0]
+  }
+
+  setCurrentCarImageAlt(){
+    return this.currentCar?.carName
+  }
+  
 }

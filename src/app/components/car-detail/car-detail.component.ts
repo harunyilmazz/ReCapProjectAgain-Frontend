@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CarDetail } from 'src/app/models/cardetails';
 import { CarDetailService } from 'src/app/services/car-detail.service';
 
@@ -10,32 +11,56 @@ import { CarDetailService } from 'src/app/services/car-detail.service';
 export class CarDetailComponent implements OnInit {
   carDetails: CarDetail[] = [];
   dataLoaded = false;
-  currentCar?:CarDetail;
-  imgBaseUrl:string="https://localhost:44389/uploads/images/"; 
-  
-  constructor(private carDetailService: CarDetailService) {}
+  currentCar: CarDetail;
+  imgBaseUrl: string = 'https://localhost:44389/uploads/images/';
+
+  constructor(
+    private carDetailService: CarDetailService,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.getCarDetails();
+    this.activatedRoute.params.subscribe(params=>{
+      if(params["brandId"]){
+        this.getCarsByBrand(params["brandId"])
+      }else if(params["colorId"]){
+        this.getCarsByColor(params["colorId"])
+      }else{
+        this.getCarDetails()
+      }
+    })
   }
 
   getCarDetails() {
-    this.carDetailService.getCarDetails().subscribe((response) => {
+    this.carDetailService.getCarDetails().subscribe(response => {
       this.carDetails = response.data;
       this.dataLoaded = true;
     });
   }
 
-  getCurrentCarClass(carDetail:CarDetail){
-    this.currentCar=carDetail;
+  getCarsByBrand(brandId: number) {
+    this.carDetailService.getCarsByBrand(brandId).subscribe(response => {
+      this.carDetails = response.data;
+      this.dataLoaded = true;
+    });
   }
 
-  setCurrentCarImageSrc(){
-     return this.imgBaseUrl + this.currentCar?.carImagePath[0]
+  getCarsByColor(colorId: number) {
+    this.carDetailService.getCarsByColor(colorId).subscribe(response => {
+      this.carDetails = response.data;
+      this.dataLoaded = true;
+    });
   }
 
-  setCurrentCarImageAlt(){
-    return this.currentCar?.carName
+  getCurrentCarClass(carDetail: CarDetail) {
+    this.currentCar = carDetail;
   }
-  
+
+  setCurrentCarImageSrc() {
+    return this.imgBaseUrl + this.currentCar.carImagePath[0];
+  }
+
+  setCurrentCarImageAlt() {
+    return this.currentCar.carName
+  }
 }

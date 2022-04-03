@@ -9,11 +9,12 @@ import { Brand } from '../models/brands';
 })
 export class BrandService {
 
-  apiUrl= "https://localhost:44389/api/brands/getall";
+  apiUrl= "https://localhost:44389/api/";
   constructor(private httpClient:HttpClient) { }
 
   getBrands():Observable<ListResponseModel<Brand>>{
-    return this.httpClient.get<ListResponseModel<Brand>>(this.apiUrl)
+    let newPath = this.apiUrl + "brands/getall"
+    return this.httpClient.get<ListResponseModel<Brand>>(newPath)
   }
 
 }

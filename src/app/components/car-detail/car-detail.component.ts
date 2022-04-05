@@ -13,6 +13,9 @@ export class CarDetailComponent implements OnInit {
   dataLoaded = false;
   currentCar: CarDetail;
   imgBaseUrl: string = 'https://localhost:44389/uploads/images/';
+  carFilterText="";
+  brandFilterText="";
+  colorFilterText="";
 
   constructor(
     private carDetailService: CarDetailService,

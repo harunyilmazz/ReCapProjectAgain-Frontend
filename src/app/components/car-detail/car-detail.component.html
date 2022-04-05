@@ -1,3 +1,40 @@
+<div class="row input-group bg-warning text-dark my-3 py-3 ms-0">
+  <div class="col-md-4">
+    <label for="carFilterText" class="form-label"><strong>Araç</strong></label>
+    <input
+      type="text"
+      [(ngModel)]="carFilterText"
+      class="form-control mr-3"
+      id="carFilterText"
+      placeholder="Ör: Egea"
+    />
+  </div>
+  <div class="col-md-4">
+    <label for="brandFilterText" class="form-label"
+      ><strong>Marka</strong></label
+    >
+    <input
+      type="text"
+      [(ngModel)]="brandFilterText"
+      class="form-control"
+      id="brandFilterText"
+      placeholder="Ör: Fiat"
+    />
+  </div>
+  <div class="col-md-4">
+    <label for="colorFilterText" class="form-label"
+      ><strong>Renk</strong></label
+    >
+    <input
+      type="text"
+      [(ngModel)]="colorFilterText"
+      class="form-control"
+      id="colorFilterText"
+      placeholder="Ör: Siyah"
+    />
+  </div>
+</div>
+
 <div
   *ngIf="dataLoaded == false"
   class="spinner-border text-secondary"
@@ -5,8 +42,12 @@
 >
   <span class="visually-hidden">Loading...</span>
 </div>
+
 <div class="row row-cols-1 row-cols-md-3 g-4">
-  <div *ngFor="let carDetail of carDetails" class="col">
+  <div
+    *ngFor="let carDetail of carDetails | carFilter: carFilterText | brandFilter: brandFilterText | colorFilter: colorFilterText"
+    class="col"
+  >
     <div class="card">
       <img
         [src]="setCurrentCarImageSrc()"
@@ -33,8 +74,18 @@
         </ul>
 
         <div class="d-grid gap-2 d-md-block">
-          <a style="float: left; width: 49%; text-align: center" routerLink="/cars/detail/{{carDetail.carId}}" class="btn btn-dark">İncele</a>
-          <a style="float: right; width: 49%; text-align: center" href="#" class="btn btn-warning">Kirala</a>          
+          <a
+            style="float: left; width: 49%; text-align: center"
+            routerLink="/cars/detail/{{ carDetail.carId }}"
+            class="btn btn-dark"
+            >İncele</a
+          >
+          <a
+            style="float: right; width: 49%; text-align: center"
+            href="#"
+            class="btn btn-warning"
+            >Kirala</a
+          >
         </div>
       </div>
     </div>

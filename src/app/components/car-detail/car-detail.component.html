@@ -1,37 +1,34 @@
 <div class="row input-group bg-warning text-dark my-3 py-3 ms-0">
-  <div class="col-md-4">
-    <label for="carFilterText" class="form-label"><strong>Araç</strong></label>
-    <input
+  <div class="row col-md-8">
+    <div class="col-md-4">
+      <select *ngIf="dataLoaded == true" class="form-select form-select-sm" aria-label="Marka">
+        <option selected value="0">Tüm Markalar</option>
+        <option value="1">Deneme</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select *ngIf="dataLoaded == true" class="form-select form-select-sm" aria-label="Renk">
+        <option selected value="0">Tüm Renkler</option>
+        <option value="1">Deneme</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <a class="btn btn-sm btn-dark text-warning me-2" href="#" role="button">Filtrele</a> 
+      <a class="btn btn-sm btn-dark text-warning" href="#" role="button">Temizle</a> 
+    </div>
+  </div>
+  <div  class="row col-md-4 ">
+    <div class="col-md-4"></div>
+    <div class="col-md-8">
+      <input
       type="text"
       [(ngModel)]="carFilterText"
-      class="form-control mr-3"
+      class="form-control form-control-sm"
       id="carFilterText"
-      placeholder="Ör: Egea"
+      placeholder="Araç arama"
     />
-  </div>
-  <div class="col-md-4">
-    <label for="brandFilterText" class="form-label"
-      ><strong>Marka</strong></label
-    >
-    <input
-      type="text"
-      [(ngModel)]="brandFilterText"
-      class="form-control"
-      id="brandFilterText"
-      placeholder="Ör: Fiat"
-    />
-  </div>
-  <div class="col-md-4">
-    <label for="colorFilterText" class="form-label"
-      ><strong>Renk</strong></label
-    >
-    <input
-      type="text"
-      [(ngModel)]="colorFilterText"
-      class="form-control"
-      id="colorFilterText"
-      placeholder="Ör: Siyah"
-    />
+    </div>
+      
   </div>
 </div>
 
@@ -45,7 +42,7 @@
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
   <div
-    *ngFor="let carDetail of carDetails | carFilter: carFilterText | brandFilter: brandFilterText | colorFilter: colorFilterText"
+    *ngFor="let carDetail of carDetails | carFilter: carFilterText"
     class="col"
   >
     <div class="card">

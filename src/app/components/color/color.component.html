@@ -8,8 +8,12 @@
 <label *ngIf="dataLoaded == true">
   <h5>Renkler</h5>
 </label>
+
+<input type="text" [(ngModel)]="colorFilterText" class="form-control" id="colorFilterText" placeholder="Renk">
+
 <ul *ngIf="dataLoaded == true" class="list-group">
   <li
+    *ngIf="!colorFilterText"
     (click)="setDeletedCurrentColor()"
     routerLink="/cars"
     [class]="getAllColorClass()"
@@ -19,7 +23,7 @@
   <li
     (click)="setCurrentColor(color)"
     routerLink="/cars/color/{{color.id}}"
-    *ngFor="let color of colors"
+    *ngFor="let color of colors  | colorFilter: colorFilterText"
     [class]="getCurrentColorClass(color)"
   >
     {{ color.colorName }}

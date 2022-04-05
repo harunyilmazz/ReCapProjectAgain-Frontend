@@ -11,6 +11,8 @@ export class BrandComponent implements OnInit {
   brands: Brand[] = [];
   dataLoaded = false;
   currentBrand?:Brand;
+  brandFilterText="";
+
   constructor(private brandService: BrandService) {}
 
   ngOnInit(): void {

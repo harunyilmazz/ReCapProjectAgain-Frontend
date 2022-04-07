@@ -1,20 +1,20 @@
 <div class="row input-group bg-warning text-dark my-3 py-3 ms-0">
   <div class="row col-md-8">
     <div class="col-md-4">
-      <select *ngIf="dataLoaded == true" class="form-select form-select-sm" aria-label="Marka">
+      <select [(ngModel)]="selectedBrandId" class="form-select form-select-sm" aria-label="Marka" required>
         <option selected value="0">Tüm Markalar</option>
-        <option value="1">Deneme</option>
+        <option *ngFor="let brand of brands" value="{{brand.id}}">{{brand.brandName}}</option>
       </select>
     </div>
     <div class="col-md-4">
-      <select *ngIf="dataLoaded == true" class="form-select form-select-sm" aria-label="Renk">
+      <select [(ngModel)]="selectedColorId" class="form-select form-select-sm" aria-label="Renk">
         <option selected value="0">Tüm Renkler</option>
-        <option value="1">Deneme</option>
+        <option *ngFor="let color of colors" value="{{color.id}}">{{color.colorName}}</option>
       </select>
     </div>
     <div class="col-md-4">
-      <a class="btn btn-sm btn-dark text-warning me-2" href="#" role="button">Filtrele</a> 
-      <a class="btn btn-sm btn-dark text-warning" href="#" role="button">Temizle</a> 
+      <button class="btn btn-sm btn-dark text-warning me-2" (click)="filter()">Filtrele</button> 
+      <button class="btn btn-sm btn-dark text-warning" (click)="clearFilter()" role="button">Temizle</button> 
     </div>
   </div>
   <div  class="row col-md-4 ">

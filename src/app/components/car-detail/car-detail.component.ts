@@ -7,6 +7,9 @@ import { Color } from 'src/app/models/colors';
 import { BrandService } from 'src/app/services/brand.service';
 import { CarDetailService } from 'src/app/services/car-detail.service';
 import { ColorService } from 'src/app/services/color.service';
+import { DateTimeService } from 'src/app/services/date-time.service';
+import { RentalDetailService } from 'src/app/services/rental-detail.service';
+import { SingleResponseModel } from 'src/app/models/singleResponseModel';
 
 @Component({
   selector: 'app-car-detail',
@@ -23,12 +26,21 @@ export class CarDetailComponent implements OnInit {
   colors: Color[]=[];
   selectedBrandId: number=0;
   selectedColorId: number=0;
+  selectedCarForRental: CarDetail;
+  rentalDate: string;
+  returnDate: string;
+
+  validateRentalDates: boolean = false;
+  rentalPeriod:number;
+  rentalConfirmation: SingleResponseModel<boolean>;
 
   constructor(
     private carDetailService: CarDetailService,
     private activatedRoute: ActivatedRoute,
     private brandService: BrandService,
-    private colorService: ColorService
+    private colorService: ColorService,
+    private dateTimeService: DateTimeService,
+    private rentalDetailService: RentalDetailService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +50,11 @@ export class CarDetailComponent implements OnInit {
       }else if(params["colorId"]){
         this.getCarsByColor(params["colorId"])
       }else{
+        this.rentalDate = undefined!
+        this.returnDate = undefined!
+        this.validateRentalDates = false
+        this.rentalPeriod = undefined!
+        this.rentalConfirmation = undefined!
         this.getCarDetails()
         this.getBrands()
         this.getColors()
@@ -114,6 +131,65 @@ export class CarDetailComponent implements OnInit {
   }
 
   setCurrentCarImageAlt() {
-    return this.currentCar.carName
+    return this.currentCar.carName;
+  }
+
+  getSelectedCarForRental(carDetail:CarDetail){
+    this.selectedCarForRental = carDetail;
+  }
+
+  getSelectedCarForRentalImageSrc(){
+    return this.imgBaseUrl + this.selectedCarForRental.carImagePath[0];
+  }
+
+  getDateNow(){
+    return this.dateTimeService.getDateNow();
+  }
+
+  addDayToDate(date:Date, addedDay:number){
+    return this.dateTimeService.addDayToDate(date, addedDay);
+  }
+
+  convertStringToDate(dateString:string){
+    return this.dateTimeService.convertStringToDate(dateString);
+  }
+
+  validateReservationDates(rentDate: string, returnDate: string) {
+    if (!rentDate || !returnDate) {
+      return;
+    }
+    let newRentDate = this.convertStringToDate(rentDate);
+    let newReturnDate = this.convertStringToDate(returnDate);
+    if (newRentDate >= newReturnDate) {
+      this.validateRentalDates = false;
+    } else {
+      this.validateRentalDates = true;
+    }
+  }
+
+  getRentalPeriod(rentDate: Date, returnDate: Date): number {
+    return this.dateTimeService.getRentalPeriod(rentDate, returnDate);
+  }
+
+  calculateRentalPeriod() {
+    this.rentalPeriod = this.getRentalPeriod(this.convertStringToDate(this.rentalDate), this.convertStringToDate(this.returnDate))
+  }
+
+  checkIfAnyReservationsBetweenSelectedDates(carId: number, rentalDate: string, returnDate: string) {
+    if (!carId || !rentalDate || !returnDate) {
+      return
+    }
+    this.validateReservationDates(rentalDate, returnDate);
+    if (this.validateRentalDates === true) {
+      this.rentalDetailService.checkIfCanCarBeRentedBetweenSelectedDates(carId, rentalDate, returnDate).subscribe(response => {
+        this.rentalConfirmation = response;
+      }, error => {
+        this.rentalConfirmation = error.error;
+      })
+    }
+  }
+
+  goToPayment(){
+    console.log("ödeme sistemine git")
   }
 }

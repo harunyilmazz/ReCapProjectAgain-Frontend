@@ -1,34 +1,169 @@
+<!-- Modal -->
+<div
+  *ngIf="dataLoaded"
+  class="modal fade"
+  id="rentalModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="rentalModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rentalModalLabel">Araç Kiralama</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body bg-light">
+        <div class="row carImageAndTitle mb-3">
+          <div name="image" class="col-md-6">
+            <img
+              *ngIf="selectedCarForRental"
+              [src]="getSelectedCarForRentalImageSrc()"
+              class="img rounded float-start"
+              alt="..."
+              width="230px"
+              height="150px"
+            />
+          </div>
+          <div
+            *ngIf="selectedCarForRental"
+            class="carInfo text-center col-md-6"
+          >            
+            <h4 class="mt-4">{{ selectedCarForRental.carName }}</h4>
+            <label class="text-muted"
+              ><strong><u>Ödenecek Tutar</u></strong></label
+            >
+            <h5 *ngIf="!rentalPeriod">{{0 | currency: "":""}}₺</h5>
+            <div *ngIf="rentalPeriod && validateRentalDates == true ">
+              <h5>{{ selectedCarForRental.dailyPrice * rentalPeriod | currency: "":"" }}₺</h5>
+              <p class="text-muted">( {{rentalPeriod}} gün )</p>
+            </div>
+          </div>
+        </div>
+        <form class="form-group row mb-2">
+          <label class="col-md-4 col-form-label text-end"
+            ><strong>Kiralama Tarihi : </strong></label
+          >
+          <div class="col-md-8">
+            <input
+              [(ngModel)]="rentalDate"
+              (ngModelChange)="validateReservationDates(rentalDate, returnDate)"
+              (ngModelChange)="checkIfAnyReservationsBetweenSelectedDates(selectedCarForRental.carId, rentalDate, returnDate)"
+              (ngModelChange)="calculateRentalPeriod()"
+              class="form-control"
+              name="rentalDate"
+              type="date"
+              [min]="getDateNow()"
+            />
+          </div>
+        </form>
+        <form *ngIf="rentalDate" class="form-group row">
+          <label class="col-md-4 col-form-label text-end"
+            ><strong>Teslim Tarihi : </strong></label
+          >
+          <div class="col-md-8">
+            <input
+              [(ngModel)]="returnDate"
+              (ngModelChange)="validateReservationDates(rentalDate, returnDate)"
+              (ngModelChange)="checkIfAnyReservationsBetweenSelectedDates(selectedCarForRental.carId, rentalDate, returnDate)"
+              (ngModelChange)="calculateRentalPeriod()"
+              class="form-control"
+              name="returnDate"
+              type="date"
+              [min]="addDayToDate(convertStringToDate(rentalDate), 1)"
+            />
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="rentalConfirmation && validateRentalDates===true">
+
+        <div
+          *ngIf="rentalConfirmation.data===false && (convertStringToDate(rentalDate) > convertStringToDate(getDateNow()))">
+          <div *ngIf="rentalPeriod" class="alert alert-danger text-center" role="alert">
+            Araç için seçili tarihler arasında başka bir rezervasyon mevcut
+          </div>
+        </div>
+
+        <div
+          *ngIf="rentalConfirmation.data===false && (convertStringToDate(rentalDate) <= convertStringToDate(getDateNow()))">
+          <div *ngIf="rentalPeriod" class="alert alert-danger text-center" role="alert">
+            Araç daha önce kiralanmış
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <div *ngIf="rentalConfirmation && validateRentalDates===true">
+          <button *ngIf="rentalConfirmation.data===true" (click)="goToPayment()" type="button" class="btn btn-warning">Kirala</button>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          İptal
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row input-group bg-warning text-dark my-3 py-3 ms-0">
   <div class="row col-md-8">
     <div class="col-md-4">
-      <select [(ngModel)]="selectedBrandId" class="form-select form-select-sm" aria-label="Marka" required>
+      <select
+        [(ngModel)]="selectedBrandId"
+        class="form-select form-select-sm"
+        aria-label="Marka"
+        required
+      >
         <option selected value="0">Tüm Markalar</option>
-        <option *ngFor="let brand of brands" value="{{brand.id}}">{{brand.brandName}}</option>
+        <option *ngFor="let brand of brands" value="{{ brand.id }}">
+          {{ brand.brandName }}
+        </option>
       </select>
     </div>
     <div class="col-md-4">
-      <select [(ngModel)]="selectedColorId" class="form-select form-select-sm" aria-label="Renk">
+      <select
+        [(ngModel)]="selectedColorId"
+        class="form-select form-select-sm"
+        aria-label="Renk"
+      >
         <option selected value="0">Tüm Renkler</option>
-        <option *ngFor="let color of colors" value="{{color.id}}">{{color.colorName}}</option>
+        <option *ngFor="let color of colors" value="{{ color.id }}">
+          {{ color.colorName }}
+        </option>
       </select>
     </div>
     <div class="col-md-4">
-      <button class="btn btn-sm btn-dark text-warning me-2" (click)="filter()">Filtrele</button> 
-      <button class="btn btn-sm btn-dark text-warning" (click)="clearFilter()" role="button">Temizle</button> 
+      <button class="btn btn-sm btn-dark text-warning me-2" (click)="filter()">
+        Filtrele
+      </button>
+      <button
+        class="btn btn-sm btn-dark text-warning"
+        (click)="clearFilter()"
+        role="button"
+      >
+        Temizle
+      </button>
     </div>
   </div>
-  <div  class="row col-md-4 ">
+  <div class="row col-md-4">
     <div class="col-md-4"></div>
     <div class="col-md-8">
       <input
-      type="text"
-      [(ngModel)]="carFilterText"
-      class="form-control form-control-sm"
-      id="carFilterText"
-      placeholder="Araç arama"
-    />
+        type="text"
+        [(ngModel)]="carFilterText"
+        class="form-control form-control-sm"
+        id="carFilterText"
+        placeholder="Araç arama"
+      />
     </div>
-      
   </div>
 </div>
 
@@ -77,12 +212,16 @@
             class="btn btn-dark"
             >İncele</a
           >
-          <a
+          <button
             style="float: right; width: 49%; text-align: center"
-            href="#"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#rentalModal"
+            (click)="getSelectedCarForRental(carDetail)"
             class="btn btn-warning"
-            >Kirala</a
           >
+            Kirala
+          </button>
         </div>
       </div>
     </div>
